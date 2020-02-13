@@ -51,11 +51,21 @@ public class SmartHomeApplication implements CommandLineRunner {
         Capteur c1=new Capteur(12.12, 8.00);
         Maison m1 =new Maison(U1,1);
 
+        Capteur c2=new Capteur(11.00, 11.00);
+        Maison m2 =new Maison(U2,3);
+
+        Capteur c3=new Capteur(40.12, 8.00);
+        Maison m3 =new Maison(U3,2);
+
+
 
         maisonRepository.save(m1);
+        maisonRepository.save(m2);
+        maisonRepository.save(m3);
 
         pieceRepository.save(new Piece(m1,c1,"opo","studio"));
-
+        pieceRepository.save(new Piece(m2,c2,"free","salon"));
+        pieceRepository.save(new Piece(m3,c3,"boot","cuisin"));
 
 
 
