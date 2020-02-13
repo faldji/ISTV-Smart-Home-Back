@@ -41,11 +41,17 @@ public class PieceRest {
     }
 
 
-
-    @RequestMapping(value="/Modifiepiece/{id_piece}", method=RequestMethod.PUT)
-    public Piece update(@PathVariable Long id_piece ,@RequestBody Piece p ) {
+//Modifie une piece
+    @RequestMapping(value="/Modifiepiece", method=RequestMethod.PUT)
+    public Piece updatePiece(@RequestParam Long id_piece) {
+        Piece p= pieceR.findById(id_piece).orElse(null);
         p.setId_piece(id_piece);
         return pieceR.save(p);
     }
+
+
+
+
+
 
 }
