@@ -1,5 +1,7 @@
 package istv.smartHome.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,12 +9,28 @@ import javax.persistence.*;
 public class Capteur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private  long Id_Capteur ;
     private double Temperature  ;
     private double Luminosite  ;
+    @JsonIgnore
+    @OneToOne(mappedBy = "capteur")
+    private Piece pieces;
+
+    public Piece getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(Piece pieces) {
+        this.pieces = pieces;
+    }
 
     public Capteur() {
+    }
+
+    public Capteur(double temperature, double luminosite, Piece pieces) {
+        Temperature = temperature;
+        Luminosite = luminosite;
+        this.pieces = pieces;
     }
 
     public long getId_Capteur() {
@@ -23,8 +41,7 @@ public class Capteur {
         return Temperature;
     }
 
-    public Capteur(long id_Capteur, double temperature, double luminosite) {
-        Id_Capteur = id_Capteur;
+    public Capteur(double temperature, double luminosite) {
         Temperature = temperature;
         Luminosite = luminosite;
     }

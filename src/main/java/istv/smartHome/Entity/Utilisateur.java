@@ -21,8 +21,6 @@ public class Utilisateur implements Serializable {
 
 
 
-
-
     //proprieties
 
     public String getIdentifiant_Device() {
