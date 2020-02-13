@@ -17,13 +17,13 @@ public class SmartHomeApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Utilisateur U1 = new Utilisateur(true,true);
-        Utilisateur U2 = new Utilisateur(true,false);
-        Utilisateur U3 = new Utilisateur(false,true);
-        Utilisateur U4 = new Utilisateur(false,true);
-        Utilisateur U5 = new Utilisateur(true,false);
-        Utilisateur U6 = new Utilisateur(false,false);
-        Utilisateur U7 = new Utilisateur(true,true);
+        Utilisateur U1 = new Utilisateur("x1231","user1",true,true);
+        Utilisateur U2 = new Utilisateur("x1232","user2",true,false);
+        Utilisateur U3 = new Utilisateur("x1233","user3",false,true);
+        Utilisateur U4 = new Utilisateur("x1234","user4",false,true);
+        Utilisateur U5 = new Utilisateur("x1235","user5",true,false);
+        Utilisateur U6 = new Utilisateur("x1236","user6",false,false);
+        Utilisateur U7 = new Utilisateur("x1237","user7",true,true);
 
         userRepo.save(U1);
         userRepo.save(U2);

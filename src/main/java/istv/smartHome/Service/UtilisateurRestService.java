@@ -5,47 +5,64 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import istv.smartHome.Repository.UtilisateurRepository;
 import istv.smartHome.Entity.Utilisateur;
+
+import javax.validation.Valid;
 
 @RestController
 public class UtilisateurRestService {
     @Autowired
     private UtilisateurRepository utilisateur;
 
-
+   // chercher tout les device dans a base de donnee
     @RequestMapping(value="/AllUtlisateur",method = RequestMethod.GET)
     public List<Utilisateur> FindAllUtilisateur(){
         return utilisateur.findAll();
 
     }
-    @RequestMapping(value="/Utlisateur/{Id_Utilisateur}",method = RequestMethod.GET)
-    public Utilisateur GetUtilisateurById(@PathVariable Long Id_Utilisateur) {
-        return utilisateur.findById(Id_Utilisateur).orElse(null);
+
+    // recherche d'un device par son ID
+    @RequestMapping(value="/Utlisateur",method = RequestMethod.GET)
+    public Utilisateur GetUtilisateurById(@RequestParam String Id_Device) {
+        return utilisateur.GetDeviceParId(Id_Device);
     }
+//ajouter un nouveau device
     @RequestMapping(value="/AddUser", method=RequestMethod.POST)
     public Utilisateur AddUtilisateur(@RequestBody Utilisateur U) {
         return utilisateur.save(U);
     }
-    @RequestMapping(value="/deleteUser/{id}", method=RequestMethod.DELETE)
-    public boolean DeleteUtilisateur(Long Id_user) {
-        utilisateur.deleteById(Id_user);
+
+    // supression d'un device
+    @RequestMapping(value="/deleteUser", method=RequestMethod.DELETE)
+    public boolean DeleteUtilisateur(@RequestParam String Id_Device) {
+        Utilisateur U = utilisateur.GetDeviceParId(Id_Device);
+        utilisateur.delete(U);
         return true;
     }
 
-    @RequestMapping(value="/UpdateUtlisateur/{Id_Utilisateur}", method=RequestMethod.PUT)
-    public Utilisateur updateUtilisateur(@PathVariable Long Id_Utilisateur, @RequestBody Utilisateur U) {
-
-        U.setId_devise(Id_Utilisateur);
-        return utilisateur.save(U);
+    // modifier un device
+    @RequestMapping(value="/UpdateUtlisateur", method=RequestMethod.PUT)
+    public String updateUtilisateur(@RequestParam String Id_Device,@RequestParam(value = "isActive",required = false) boolean isActive, @RequestParam(value = "isFirstUsage",required = false) boolean isFirstUse) {
+       Utilisateur user  = utilisateur.GetDeviceParId(Id_Device);
+      if(user == null)
+          return"utilisateur introuvable";
+      else{
+          if(!isActive ){
+              user.setActive(isActive);
+          }
+          if(!isFirstUse) {
+              user.setFirstUsage(isFirstUse);
+          }
+      }
+        utilisateur.save(user);
+      return "modification termine";
 
     }
+
 
     // liste des device active
     @RequestMapping(value="/AllUtlisateurActive",method = RequestMethod.GET)
@@ -59,13 +76,7 @@ public class UtilisateurRestService {
         return utilisateur.FirstUtilisation();
     }
 
-    /*
-     * @RequestMapping(value="/UtilsateurActive/{Id_device}",method =
-     * RequestMethod.GET) public Utilisateur utilisateurActiveByID(@PathVariable
-     * Long Id_device) {
-     *
-     * return utilisateur.utilisateurActiveById(Id_device); }
-     */
+
 
 
 
