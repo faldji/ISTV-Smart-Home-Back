@@ -25,8 +25,9 @@ import java.util.List;
     public class CapteurController {
         @Autowired
         CapteurService capteurService;
+
         @Autowired
-        public CapteurRepository capteur ;
+        CapteurRepository capteurRepository;
 
         private static final Logger log = LoggerFactory.getLogger(CapteurController.class);
 
@@ -120,10 +121,12 @@ import java.util.List;
             }
         }
 
-        @RequestMapping(value = "/InfoPiece",method = RequestMethod.GET)
-        public Capteur InfoCapteurParPiece(@RequestParam String pseudoPiece){
 
-            return capteur.infoCapteurParPirce(pseudoPiece);
+
+        //recuper la temperature
+        @RequestMapping(value = "/temperature",method = RequestMethod.GET)
+        public double getTemperParpiece(@RequestParam String ty_piece){
+            return  capteurRepository.Gettemperature(ty_piece);
         }
 
     }

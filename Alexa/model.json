@@ -1,0 +1,532 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "smart home",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "Que puis-je dire"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "PieceConfigIntent",
+          "slots": [
+            {
+              "name": "roomType",
+              "type": "AMAZON.Room",
+              "samples": [
+                "{roomType}"
+              ]
+            }
+          ],
+          "samples": [
+            "configure une piece"
+          ]
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "ConfigIntent",
+          "slots": [
+            {
+              "name": "nbPieces",
+              "type": "AMAZON.NUMBER",
+              "samples": [
+                "{nbPieces} pièces",
+                "{nbPieces}"
+              ]
+            }
+          ],
+          "samples": [
+            "configure {nbPieces} pièces.",
+            "débute la configuration",
+            "initialise ma maison",
+            "commence ma configuration",
+            "configure  ma maison"
+          ]
+        },
+        {
+          "name": "DemandeEtatIntent",
+          "slots": [
+            {
+              "name": "piece",
+              "type": "AMAZON.Room",
+              "samples": [
+                "{piece}"
+              ]
+            },
+            {
+              "name": "TempOuLum",
+              "type": "choixEtatSlot",
+              "samples": [
+                "{TempOuLum}"
+              ]
+            }
+          ],
+          "samples": [
+            "affiche l'etat de ma maison ",
+            "je veux savoir l'etat de ma maison "
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "SLOTYesNo",
+          "values": [
+            {
+              "name": {
+                "value": "Non",
+                "synonyms": [
+                  "je ne pense pas",
+                  "négatif",
+                  "faux",
+                  "nope"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Oui",
+                "synonyms": [
+                  "wai",
+                  "affirmatif",
+                  "je pense",
+                  "ok",
+                  "yeah"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "AMAZON.Room",
+          "values": [
+            {
+              "name": {
+                "value": "chambre"
+              }
+            },
+            {
+              "name": {
+                "value": "toilette",
+                "synonyms": [
+                  "salle de bain"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "salon"
+              }
+            },
+            {
+              "name": {
+                "value": "cuisine"
+              }
+            }
+          ]
+        },
+        {
+          "name": "choixEtatSlot",
+          "values": [
+            {
+              "name": {
+                "value": "les deux",
+                "synonyms": [
+                  "je veux savoir tout",
+                  "tout"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Luminosité",
+                "synonyms": [
+                  "lumière"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Température",
+                "synonyms": [
+                  "chaleur"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "PieceConfigIntent",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.760274373466"
+          },
+          "slots": [
+            {
+              "name": "roomType",
+              "type": "AMAZON.Room",
+              "confirmationRequired": true,
+              "elicitationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.1011467838360.405026293116",
+                "elicitation": "Elicit.Slot.1011467838360.405026293116"
+              },
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.41157093379.389930400415.193833537862",
+                  "values": [
+                    "toilette",
+                    "cuisine",
+                    "chambre",
+                    "salon"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ConfigIntent",
+          "delegationStrategy": "SKILL_RESPONSE",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "nbPieces",
+              "type": "AMAZON.NUMBER",
+              "confirmationRequired": true,
+              "elicitationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.255957468492.671592635191",
+                "elicitation": "Elicit.Slot.230820587092.211680764852"
+              },
+              "validations": [
+                {
+                  "type": "isLessThan",
+                  "prompt": "Slot.Validation.230820587092.211680764852.423652440697",
+                  "value": "5"
+                },
+                {
+                  "type": "isGreaterThan",
+                  "prompt": "Slot.Validation.230820587092.211680764852.289179237293",
+                  "value": "0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "DemandeEtatIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "piece",
+              "type": "AMAZON.Room",
+              "confirmationRequired": true,
+              "elicitationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.1108869323418.1504749744386",
+                "elicitation": "Elicit.Slot.1108869323418.1504749744386"
+              },
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.1108869323418.1504749744386.1394198256543",
+                  "values": [
+                    "Salon",
+                    "Cuisine",
+                    "Chambre",
+                    "Toilette"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "TempOuLum",
+              "type": "choixEtatSlot",
+              "confirmationRequired": true,
+              "elicitationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.1108869323418.1518031894967",
+                "elicitation": "Elicit.Slot.1108869323418.1518031894967"
+              },
+              "validations": [
+                {
+                  "type": "hasEntityResolutionMatch",
+                  "prompt": "Slot.Validation.1108869323418.1518031894967.96705366802"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.1395412129296.1296800405383",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Avez-vous configurer la rasberry ?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1395412129296.1296800405383.1216321720491",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "les réponses correctent sont oui ou non."
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1395412129296.9172896816",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "bien, combien de pièces voulez-vous configurer?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.1395412129296.9172896816",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "êtes vous sûre de vouloir gérer {nbPiece} pièces ?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1395412129296.9172896816.451200449397",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Désolé, mais smart home ne peut pas gérer plus de quatres pièces pour le moment."
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1395412129296.9172896816.1244732224746",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Désolé, je ne peux pas configurer une maison avec zéro pièces."
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1011467838360.405026293116",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Quel est sont type?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.1011467838360.405026293116",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "êtes vous sûre de vouloir confirmer le type {roomType} ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.551868082033.1426689729689",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Commençons par configurer votre maison. Vous êtes près ?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.66447535163.1110989360851.1275385237343",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Oui ou Non"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.66447535163",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "la maison avec {nbPiece} est créer, voulez-vous continuer?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.760274373466.1527327604938",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "voulez-vous un autre nom pour la pièce {roomType} ?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.760274373466",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Voulez-vous confirmer cette pièce?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.760274373466.1527327604938.1428666963988",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "oui ou non."
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.41157093379.389930400415.193833537862",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Je n'ai pas compris, essayer de dire salon, cuisine, toilette ou chambre"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.230820587092.211680764852",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "bien, combien de pièces voulez-vous configurer?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.230820587092.211680764852.423652440697",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Désolé, mais smart home  peut gérer uniquement entre une et quatres pièces pour le moment."
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.230820587092.211680764852.289179237293",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Désolé, je ne peux pas configurer une maison avec {nbPieces} pièces."
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.255957468492.671592635191",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Voulez-vous confirmer {nbPieces} pièces?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1108869323418.541066132294",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "okey quelle piece ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1108869323418.1504749744386",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "de quelle piece s'agit-t-il ?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.1108869323418.1504749744386",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "voulez-vous confirmer {piece} ?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1108869323418.1504749744386.1394198256543",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Je n'ai pas compris, essayer de dire salon, cuisine, toilette ou chambre"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1108869323418.1518031894967",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "vous voulez savoir la temperature ou la lumiere  ou les deux?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.1108869323418.1518031894967",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "etes-vous sur ?"
+          }
+        ]
+      },
+      {
+        "id": "Slot.Validation.1108869323418.1518031894967.96705366802",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Desolé mais j'accepte que temperature ou luminosite pour l'instant"
+          }
+        ]
+      }
+    ]
+  }
+}
