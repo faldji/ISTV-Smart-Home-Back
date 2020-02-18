@@ -41,13 +41,15 @@ public class ConfigController {
                                                 @RequestParam("nbPiece") int nbPiece,@RequestBody(required = true) Collection<Piece> housesRoom) {
         User user = userService.findUserByDeviceId(deviceId);
         if(user == null)
-            return new ResponseEntity<>("false", HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>("pas de user avec ce id", HttpStatus.NOT_MODIFIED);
+        if(user.isConfiguredHouse())
+            return new ResponseEntity<>("userConfig dejà à true", HttpStatus.NOT_MODIFIED);
         if(nbPiece < 1 || nbPiece > 4)
-            return new ResponseEntity<>("false",HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>("nbPiece non valid",HttpStatus.NOT_MODIFIED);
         if(housesRoom == null)
-            return new ResponseEntity<>("false", HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>("pieces = null", HttpStatus.NOT_MODIFIED);
         if(housesRoom.size() != nbPiece)
-            return new ResponseEntity<>("false", HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>("nbr pieces != nbPiece", HttpStatus.NOT_MODIFIED);
         Collection<Piece> newPiece = new ArrayList<>();
 
         if ( configService.addMaisonWithPiece(user,nbPiece,housesRoom) != null)

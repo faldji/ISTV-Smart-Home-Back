@@ -3,6 +3,7 @@ package istv.smartHome.Entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 public class User {
@@ -12,7 +13,7 @@ public class User {
     private String deviceId;
     private boolean isActive;
     private boolean isFirstUsage;
-
+    private boolean isConfiguredHouse;
     public long getId() {
         return id;
     }
@@ -23,6 +24,14 @@ public class User {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public boolean isConfiguredHouse() {
+        return isConfiguredHouse;
+    }
+
+    public void setConfiguredHouse(boolean configuredHouse) {
+        isConfiguredHouse = configuredHouse;
     }
 
     public boolean isActive() {

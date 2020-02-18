@@ -9,14 +9,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * Controlleur dédié a la manipulation des utilisateurs
  */
 @RestController
 @Api(value="ISTV-Smart-Home", description = "Gestion d'un utilisateur", produces = "application/json")
 public class UserController {
-    @Autowired
+    final
     UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     /**
      * Ajoute un nouvel utilisateur dans la BD
      *
@@ -30,8 +39,9 @@ public class UserController {
     @PostMapping("/user/add")
     @ResponseBody
     public ResponseEntity<String> register(@RequestParam("deviceId") String deviceId,
-                                           @RequestParam(value = "isActive",required = false) Boolean isActive,
-                                           @RequestParam(value = "isFirstUsage",required = false) Boolean isFirstUsage) {
+                                           @RequestParam(required = false) Boolean isEndConfig,
+                                           @RequestParam(required = false) Boolean isActive,
+                                           @RequestParam(required = false) Boolean isFirstUsage) {
         User user = userService.findUserByDeviceId(deviceId);
         if(user != null)
             return new ResponseEntity<>("Utilisateur déjà inscrit.", HttpStatus.FORBIDDEN);
@@ -39,12 +49,28 @@ public class UserController {
         newUser.setDeviceId(deviceId);
         newUser.setActive(isActive != null ?  isActive :true);
         newUser.setFirstUsage(isFirstUsage != null ?  isFirstUsage :false);
+        newUser.setFirstUsage(isEndConfig != null ?  isEndConfig :false);
             if(userService.addUser(newUser) != null)
                 return new ResponseEntity<>("L'utilisateur a correctement été créé.", HttpStatus.OK);
 
             return new ResponseEntity<>("Une erreur est survenue lors de la création de votre compte.",
-                    HttpStatus.FORBIDDEN);
+                    HttpStatus.NOT_ACCEPTABLE);
         }
+
+    /**
+     * retourne tous les utilisateurs
+     *
+     * @return ResponseEntity avec la liste des users
+     */
+    @ApiOperation(value = "Retourne tous utilisateurs de la BD")
+    @GetMapping("/users")
+    @ResponseBody
+    public ResponseEntity<Collection<User>> getUsers(){
+        Collection<User> users = userService.findAll();
+        if (users == null)
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(users,HttpStatus.OK);
+    }
 
     /**
      * retourne un utilisateur à partir de son device ID

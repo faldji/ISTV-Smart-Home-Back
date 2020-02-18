@@ -18,7 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
-
+### Alexa node module
+Alexa/node_modules
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

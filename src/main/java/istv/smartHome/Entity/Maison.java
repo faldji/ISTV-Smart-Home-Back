@@ -20,7 +20,7 @@ public class Maison implements Serializable {
 
     @JsonIgnore
     @OneToOne
-    @JoinColumn(name="ID",referencedColumnName = "ID")
+    @JoinColumn()
     private User utilisateur;
 
     @DecimalMin("1") @DecimalMax("4")
