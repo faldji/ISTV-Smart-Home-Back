@@ -25,14 +25,12 @@ public class ConfigService {
 
     public Collection<Piece> addMaisonWithPiece(User user, int nbPiece, Collection<Piece> pieces) {
         Random random = new Random();
-
         Maison newMaison = new Maison();
+        user.setConfiguredHouse(true);
         newMaison.setNb_piece(nbPiece);
         newMaison.setUtilisateur(user);
         Maison savedMaison  = maisonRepository.save(newMaison);
-        if (savedMaison == null)
-            return null;
-        Collection<Piece> savedPieces = new ArrayList<>();
+        Collection<Piece> newPieces = new ArrayList<>();
         for (Piece piece : pieces){
             double rndLum = random.nextDouble()*500;
             double rndTemp = (double) random.nextInt(100 - 10)-10;
@@ -41,14 +39,14 @@ public class ConfigService {
             capteur.setTemperature(rndTemp);
             piece.setCapteur(capteur);
             piece.setMaison(savedMaison);
-            savedPieces.add(piece);
+            newPieces.add(piece);
         }
-
-        if (pieceRepository.saveAll(savedPieces) == null){
+        Collection<Piece> savedPieces = (Collection<Piece>)pieceRepository.saveAll(newPieces);
+        if (savedPieces.size() == 0){
             maisonRepository.delete(savedMaison);
-
             return null;
         }
-return savedPieces;
+
+        return savedPieces;
     }
 }

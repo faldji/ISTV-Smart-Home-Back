@@ -1,0 +1,16 @@
+{
+  "name": "smarthomeskill",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "istv",
+  "license": "ISC",
+  "dependencies": {
+    "ask-sdk-core": "^2.7.0",
+    "ask-sdk-model": "^1.25.1",
+    "axios": "^0.19.2"
+  }
+}
