@@ -14,10 +14,10 @@ public class PieceRest {
     private PieceRepository pieceR;
 
     //lister tous les pieces
-    @RequestMapping(value = "/AllPiece",method = RequestMethod.GET)
-    public List<Piece> getAllPiece() {
-        return pieceR.findAll();
-    }
+//    @RequestMapping(value = "/AllPiece",method = RequestMethod.GET)
+////    public List<Piece> getAllPiece() {
+////        return pieceR.findAll();
+////    }
 
     //Rechercher avec Id
     @RequestMapping(value="/IdPiece", method=RequestMethod.GET)
@@ -41,16 +41,14 @@ public class PieceRest {
     }
 
 
-//Modifie une piece
+   //Modifie une piece
     @RequestMapping(value="/Modifiepiece", method=RequestMethod.PUT)
     public Piece updatePiece(@RequestParam Long id_piece) {
         Piece p= pieceR.findById(id_piece).orElse(null);
         p.setId_piece(id_piece);
         return pieceR.save(p);
+
     }
-
-
-
 
 
 

@@ -22,20 +22,9 @@ public class Piece implements Serializable {
     private String pseudo;
     private String typePiece;
 
-    public Piece(Maison maison, Capteur capteur, String pseudo, String typePiece) {
-        this.maison = maison;
-        this.capteur = capteur;
-        this.pseudo = pseudo;
-        this.typePiece = typePiece;
-    }
-
-    public Piece() {
-    }
-
-
     public Maison getMaison() {
         return maison;
-    }
+   }
 
     public Capteur getCapteur() {
         return capteur;
@@ -57,8 +46,7 @@ public class Piece implements Serializable {
         this.id_piece = id_piece;
     }
 
-    public void setMaison(Maison maison) {
-        this.maison = maison;
+    public void setMaison(Maison maison) {        this.maison = maison;
     }
 
     public void setCapteur(Capteur capteur) {
