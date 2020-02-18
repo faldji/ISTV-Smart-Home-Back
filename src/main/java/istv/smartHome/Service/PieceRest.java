@@ -13,31 +13,43 @@ public class PieceRest {
     @Autowired
     private PieceRepository pieceR;
 
-    @RequestMapping(value = "/AllPiece",method = RequestMethod.GET)
-    private List<Piece> getAllPiece() {
-        return pieceR.findAll();
-    }
+    //lister tous les pieces
+//    @RequestMapping(value = "/AllPiece",method = RequestMethod.GET)
+////    public List<Piece> getAllPiece() {
+////        return pieceR.findAll();
+////    }
 
-    @RequestMapping(value="/piece/{id_piece}", method=RequestMethod.GET)
-    private Piece getPieceByid(@PathVariable Long id_piece) {
+    //Rechercher avec Id
+    @RequestMapping(value="/IdPiece", method=RequestMethod.GET)
+    public Piece GetPieceById(@RequestParam Long id_piece) {
         return pieceR.findById(id_piece).orElse(null);
     }
 
+
+    // Ajouter piece
     @RequestMapping(value="/Ajoutpiece", method=RequestMethod.POST)
-    private Piece add(@RequestBody Piece p) {
+    public Piece add(@RequestBody Piece p) {
         return pieceR.save(p);
     }
 
-    @RequestMapping(value="/Supprimerpiece/{id_piece}", method=RequestMethod.DELETE)
-    private boolean supprimer(@PathVariable Long id_piece) {
-        pieceR.deleteById(id_piece);
+    //Supprimer une par Id/Piece
+    @RequestMapping(value="/Supprimerpiece", method=RequestMethod.DELETE)
+    public boolean SupprimerPiece(@RequestParam Long id_piece) {
+        Piece p= pieceR.findById(id_piece).orElse(null);
+        pieceR.delete(p);
         return true;
     }
 
-    @RequestMapping(value="/Modifiepiece/{id_piece}", method=RequestMethod.PUT)
-    private Piece update(@PathVariable Long id_piece ,@RequestBody Piece p ) {
+
+   //Modifie une piece
+    @RequestMapping(value="/Modifiepiece", method=RequestMethod.PUT)
+    public Piece updatePiece(@RequestParam Long id_piece) {
+        Piece p= pieceR.findById(id_piece).orElse(null);
         p.setId_piece(id_piece);
         return pieceR.save(p);
+
     }
+
+
 
 }

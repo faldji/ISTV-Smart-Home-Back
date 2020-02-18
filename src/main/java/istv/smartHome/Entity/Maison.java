@@ -1,5 +1,7 @@
 package istv.smartHome.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
@@ -11,14 +13,20 @@ public class Maison implements Serializable {
 
     @Id @GeneratedValue
     private Long id_Maison;
-    @ManyToOne
+
+/*    @ManyToOne
     @JoinColumn(name = "Identifiant_Device")
-    private Utilisateur utilisateur;
+    private Utilisateur utilisateur;*/
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name="ID",referencedColumnName = "ID")
+    private User utilisateur;
 
     @DecimalMin("1") @DecimalMax("4")
     private int nb_piece;
 
-    @OneToMany(mappedBy = "maison",fetch = FetchType.LAZY)
+    @OneToMany(targetEntity =Piece.class,mappedBy = "maison",fetch = FetchType.LAZY)
     private Collection <Piece>pieces;
 
     public Long getId_Maison() {
@@ -29,12 +37,15 @@ public class Maison implements Serializable {
         this.id_Maison = id_Maison;
     }
 
-    public Maison(Utilisateur utilisateur, int nb_piece) {
-        this.utilisateur = utilisateur;
-        this.nb_piece = nb_piece;
+    public Collection<Piece> getPieces() {
+        return pieces;
     }
 
-    public Utilisateur getUtilisateur() {
+    public void setPieces(Collection<Piece> pieces) {
+        this.pieces = pieces;
+    }
+
+    public User getUtilisateur() {
         return utilisateur;
     }
 
@@ -42,7 +53,7 @@ public class Maison implements Serializable {
         return nb_piece;
     }
 
-    public void setUtilisateur(Utilisateur utilisateur) {
+    public void setUtilisateur(User utilisateur) {
         this.utilisateur = utilisateur;
     }
 

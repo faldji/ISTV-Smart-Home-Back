@@ -12,6 +12,7 @@ public class Capteur {
     private  long Id_Capteur ;
     private double Temperature  ;
     private double Luminosite  ;
+
     @JsonIgnore
     @OneToOne(mappedBy = "capteur")
     private Piece pieces;

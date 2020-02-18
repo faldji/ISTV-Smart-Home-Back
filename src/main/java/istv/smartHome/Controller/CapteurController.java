@@ -5,6 +5,7 @@ package istv.smartHome.Controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import istv.smartHome.Entity.Capteur;
+import istv.smartHome.Repository.CapteurRepository;
 import istv.smartHome.Service.CapteurService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,9 @@ import java.util.List;
     public class CapteurController {
         @Autowired
         CapteurService capteurService;
+
+        @Autowired
+        CapteurRepository capteurRepository;
 
         private static final Logger log = LoggerFactory.getLogger(CapteurController.class);
 
@@ -115,6 +119,14 @@ import java.util.List;
             }else{
                 return new ResponseEntity<>("Capteur introuvable",HttpStatus.NOT_MODIFIED);
             }
+        }
+
+
+
+        //recuper la temperature
+        @RequestMapping(value = "/temperature",method = RequestMethod.GET)
+        public double getTemperParpiece(@RequestParam String ty_piece){
+            return  capteurRepository.Gettemperature(ty_piece);
         }
 
     }
