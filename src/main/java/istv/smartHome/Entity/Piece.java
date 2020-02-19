@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Piece implements Serializable {
     @Id @GeneratedValue
     private Long id_piece;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_Maison")
     private Maison maison;

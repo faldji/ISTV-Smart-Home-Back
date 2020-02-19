@@ -3,6 +3,7 @@ package istv.smartHome.Controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import istv.smartHome.Entity.User;
+import istv.smartHome.Repository.UserRepository;
 import istv.smartHome.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ import java.util.Collection;
 public class UserController {
     final
     UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -143,5 +146,21 @@ public class UserController {
                 return new ResponseEntity<>("Une erreur est survenue lors de la suppression de votre compte.",
                         HttpStatus.FORBIDDEN);
     }
+
+    @ApiOperation(value = "les utilisateurs connecte et qui ont fini leur configuration ", response = String.class)
+    @GetMapping("/user/config")
+    @ResponseBody
+    public ResponseEntity userconnecteconfigure(@RequestParam String deviceid){
+        User u = userService.findUserByDeviceId(deviceid);
+        if(u==null)
+            return new ResponseEntity<>("L'urilisateur n'est pas enregistre dans la bdd",
+                    HttpStatus.FORBIDDEN);
+        if(u.isConfiguredHouse()==false)
+            return new ResponseEntity<>("L'utilisateur n'a pas fini de configurer sa maison",HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>("L'utilisateur est bien present dans la BDD et il a fini sa confuguration", HttpStatus.OK);
+
+    }
+
+
 
 }
