@@ -150,17 +150,13 @@ public class UserController {
     @ApiOperation(value = "les utilisateurs connecte et qui ont fini leur configuration ", response = String.class)
     @GetMapping("/user/config")
     @ResponseBody
-    public ResponseEntity userconnecteconfigure(@RequestParam String deviceid){
-        User u = userService.findUserByDeviceId(deviceid);
+    public ResponseEntity<String> userconnecteconfigure(@RequestParam("deviceId") String deviceId){
+        User u = userService.findUserByDeviceId(deviceId);
         if(u==null)
             return new ResponseEntity<>("L'urilisateur n'est pas enregistre dans la bdd",
                     HttpStatus.FORBIDDEN);
-        if(u.isConfiguredHouse()==false)
-            return new ResponseEntity<>("L'utilisateur n'a pas fini de configurer sa maison",HttpStatus.FORBIDDEN);
+        if(!u.isConfiguredHouse())
+          return new ResponseEntity<>("L'utilisateur n'a pas fini de configurer sa maison",HttpStatus.FORBIDDEN);
         return new ResponseEntity<>("L'utilisateur est bien present dans la BDD et il a fini sa confuguration", HttpStatus.OK);
-
     }
-
-
-
 }
