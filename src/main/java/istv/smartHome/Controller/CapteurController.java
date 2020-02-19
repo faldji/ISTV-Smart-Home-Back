@@ -123,10 +123,41 @@ import java.util.List;
 
 
 
-        //recuper la temperature
-        @RequestMapping(value = "/temperature",method = RequestMethod.GET)
-        public double getTemperParpiece(@RequestParam String ty_piece){
-            return  capteurRepository.Gettemperature(ty_piece);
+        @ApiOperation(value = "retourner la temperature d'une piece par user", response = double.class)
+        @GetMapping("/capteur/temperature")
+        @ResponseBody
+        public ResponseEntity getTemperParpiece(@RequestParam String ty_piece,@RequestParam String id_device){
+            Double temp
+             = capteurRepository.Gettemperature(ty_piece,id_device);
+            if(temp ==null)
+                return new ResponseEntity<>("j'arrive pas a recuperer la temperature",
+                        HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(temp,HttpStatus.OK);
+        }
+
+        @ApiOperation(value = "retourner la luminosite d'une piece par user", response = double.class)
+        @GetMapping("/capteur/luminosite")
+        @ResponseBody
+        public ResponseEntity getLuminoParpiece(@RequestParam String ty_piece,@RequestParam String id_device){
+            Double temp
+             = capteurRepository.GetLuminosite(ty_piece,id_device);
+            if(temp ==null)
+                return new ResponseEntity<>("j'arrive pas a recuperer la luminosite",
+                        HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(temp,HttpStatus.OK);
+        }
+
+
+        @ApiOperation(value = "retourner l'etat d'une piece par user", response = Capteur.class)
+        @GetMapping("/capteur/Etat")
+        @ResponseBody
+        public ResponseEntity getEtatPiece(@RequestParam String ty_piece,@RequestParam String id_device){
+        Capteur capteur
+            = capteurRepository.GetEtatPiece(ty_piece,id_device);
+            if(capteur ==null)
+                return new ResponseEntity<>("j'arrive l'etat de la piece pas a recuperer la temperature",
+                        HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(capteur,HttpStatus.OK);
         }
 
     }
