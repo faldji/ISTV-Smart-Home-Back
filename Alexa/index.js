@@ -1,23 +1,6 @@
 const Alexa = require('ask-sdk-core');
-const axios = require('axios');
-const SKILL_NAME = 'smart home';
-const WELCOME_MESSAGE = "Bienvenue sur Smart-Home  I S T V! ";
-const ERROR_NOT_UNDERSTAND_MESSAGE = 'Désolé, je ne connais pas cette commande! dites que puis-je dire pour avoir de l\'aide.';
-const FIRST_CONFIG_DIFF_PIECES_MESSAGE = "On continue. Au tours des différentes pièces de la maison. ";
-const NEW_CONFIG_MESSAGE = "Pour commençer configurons votre maison. ";
-const CONNECTED_USER_INTRO_MESSAGE = "Je peux vous aider à faire un état de lieu des différentes pièces de la maison, vérifiér les lampes, la température etc... " +
-    "Vous pouvez dire par exemple, smart home quelle est la température du salon ?";
-const CONNECTED_USER_INTRO_REPROMPT = "Je peux aussi vous montrer toutes les commandes possible. " +
-    "Si vous avez bésoin d'aides, dites Smart Home, Que puis-je dire ?";
-const NEW_ACCOUNT_MESSAGE = "Je constate que c'est votre prémières utilisation, mais pas de panique je suis là pour vous guider. ";
-const HELP_MESSAGE = 'Pour des raisons de développement, cette liste n\'est pas exhaustive. ' +
-    'Dites réinitialise ma maison pour la réconfigurer à partir de zéro. ' +
-    'Dites configure une pièce pour lancer la configuration d\'une pièce. ' +
-    'Vous pouver quitter Smart Home en disant des mots commes annuler, quiter, stop etc...';
-const HELP_REPROMPT = 'En quoi d\'autres puis-je vous aider ?';
-const STOP_MESSAGE = 'Très bien. A bientôt !';
-const MORE_MESSAGE = 'Voulez-vous plus ?';
-const MISSING_DETAILS = 'Nope';
+const Api = require('ApiServices');
+const Messages = require('Messages');
 // const express = require('express');
 // const app = express();
 // app.get('/',function (req,res) {
@@ -27,84 +10,84 @@ const MISSING_DETAILS = 'Nope';
 // app.listen(3000, function () {
 //     console.log('Example app listening on port 3000!')
 // });
-const isNewUser =  async (id) => {
-    return await axios.get('http://35.233.100.128:8080/user?deviceId=' + id)
-        .then(response => {
-            return response.status !== 200;
-        })
-        .catch(error => {
-            return true;
-        })
-};
-const addNewUser =  async (id) => {
-    return await axios.post('http://35.233.100.128:8080/user/add?deviceId=' + id,{deviceId: id})
-        .then(response => {
-            return response.status === 200;
-        })
-        .catch(error => {
-            return false;
-        })
-};
-const checkNewUser = async (id) => {
 
-    return await isNewUser(id).then(r => {
-        if(r)
-            return addNewUser(id)
-                .then(re =>{
-                    return re || false;
-                }).catch(error => {return false});
-        return false;
-    }).catch(error => {return false});
-};
 const LaunchRequestHandler = {
     async canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' && ! await isNewUser(handlerInput.requestEnvelope.session.user.userId);
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' &&  await Api.isConfigEnded(handlerInput.requestEnvelope.session.user.userId);
     },
     handle(handlerInput) {
         return handlerInput.responseBuilder
-            .speak(WELCOME_MESSAGE + CONNECTED_USER_INTRO_MESSAGE)
-            .withSimpleCard('Smart home', WELCOME_MESSAGE + CONNECTED_USER_INTRO_MESSAGE)
-            .reprompt(CONNECTED_USER_INTRO_REPROMPT)
+            .speak(Messages.WELCOME_MESSAGE + Messages.CONNECTED_USER_INTRO_MESSAGE)
+            .withSimpleCard('Smart home', Messages.WELCOME_MESSAGE + Messages.CONNECTED_USER_INTRO_MESSAGE)
+            .reprompt(Messages.CONNECTED_USER_INTRO_REPROMPT)
             .getResponse();
     }
 };
 const NewUserLaunchRequestHandler = {
     async canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' && await checkNewUser(handlerInput.requestEnvelope.session.user.userId);
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' && await Api.checkAndAddNewUser(handlerInput.requestEnvelope.session.user.userId);
     },
     handle(handlerInput) {
         return handlerInput.responseBuilder
-            .speak(WELCOME_MESSAGE + NEW_ACCOUNT_MESSAGE + NEW_CONFIG_MESSAGE)
-            .withSimpleCard('Smart home', WELCOME_MESSAGE + NEW_ACCOUNT_MESSAGE + NEW_CONFIG_MESSAGE)
-            .reprompt('Pour commencer la configuration, dites commence la configuration')
+            .speak(Messages.WELCOME_MESSAGE + Messages.NEW_ACCOUNT_MESSAGE + Messages.NEW_CONFIG_MESSAGE)
+            .withSimpleCard('Smart home', Messages.WELCOME_MESSAGE + Messages.NEW_ACCOUNT_MESSAGE + Messages.NEW_CONFIG_MESSAGE)
+            .reprompt(Messages.NEW_ACCOUNT_MESSAGE_REPROMPT)
             .getResponse();
     }
 };
 
-const FirstConfigIntentHandler = {
-    canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'firstUsageConfig'
-            && handlerInput.requestEnvelope.request.dialogState === 'COMPLETED';
+const UserResumeConfigLaunchRequestHandler = {
+    async canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' && ! await Api.isConfigEnded(handlerInput.requestEnvelope.session.user.userId);
     },
     handle(handlerInput) {
-        const speechText = FIRST_CONFIG_DIFF_PIECES_MESSAGE;
+        return handlerInput.responseBuilder
+            .speak(Messages.WELCOME_MESSAGE + Messages.CONNECTED_USER_INTRO_RESUME_CONFIG_MESSAGE)
+            .withSimpleCard('Smart home', Messages.WELCOME_MESSAGE + Messages.CONNECTED_USER_INTRO_RESUME_CONFIG_MESSAGE)
+            .reprompt(Messages.CONNECTED_USER_INTRO_RESUME_CONFIG_MESSAGE_REPROMPT)
+            .getResponse();
+    }
+};
 
+/*
+-----------------------------------------------------------------------------------------
+ */
+const FirstConfigIntentHandlerStarted = {
+     async canHandle(handlerInput) {
+         const uid = handlerInput.requestEnvelope.session.user.userId;
+         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'ConfigIntent'
+            && handlerInput.requestEnvelope.request.dialogState === 'STARTED' &&
+             ! await Api.addUserOrCheckConfigEnded(uid);
+
+    },
+     handle(handlerInput) {
+
+        let currentIntent = handlerInput.requestEnvelope.request.intent;
+        const speechText = Messages.FIRST_CONFIG_DIFF_PIECES_MESSAGE;
+        const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
+        const slotValues = Api.getSlotValues(filledSlots);
+         console.log(slotValues);
+        if (slotValues['nbPieces'].isValidated && filledSlots.nbPieces.value === "1"){
+            console.log('ok nb');
+            if (slotValues.firstRoomType){
+                console.log('ok f');
+                return handlerInput.responseBuilder.speak('ok').getResponse();
+            }
+
+        }
+        console.log("no fill");
         return handlerInput.responseBuilder
             .speak(speechText)
-            .withSimpleCard(SKILL_NAME, speechText)
-            .addDelegateDirective({
-                name: 'PieceConfigIntent',
-                confirmationStatus: 'NONE',
-                slots: {}
-            })
+            .withSimpleCard(Messages.SKILL_NAME, speechText)
+            .addDelegateDirective()
             .getResponse();
     }
 };
 const PieceConfigIntentHandler = {
     async canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'PieceConfigIntent' && ! await isNewUser(handlerInput.requestEnvelope.session.user.userId)
+            && handlerInput.requestEnvelope.request.intent.name === 'PieceConfigIntent' && ! await Api.isNewUser(handlerInput.requestEnvelope.session.user.userId)
             && handlerInput.requestEnvelope.request.dialogState === 'COMPLETED';
     },
     handle(handlerInput) {
@@ -112,10 +95,18 @@ const PieceConfigIntentHandler = {
 
         return handlerInput.responseBuilder
             .speak(speechText)
-            .withSimpleCard(SKILL_NAME, speechText)
+            .withSimpleCard(Messages.SKILL_NAME, speechText)
             .getResponse();
     }
 };
+
+/*
+-----------------------------------------------------------------------------------------
+ */
+
+/*
+-----------------------------------------------------------------------------------------
+ */
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -123,9 +114,9 @@ const HelpIntentHandler = {
     },
     handle(handlerInput) {
         return handlerInput.responseBuilder
-            .speak(HELP_MESSAGE)
-            .reprompt(HELP_REPROMPT)
-            .withSimpleCard(SKILL_NAME, HELP_MESSAGE)
+            .speak(Messages.HELP_MESSAGE)
+            .reprompt(Messages.HELP_REPROMPT)
+            .withSimpleCard(Messages.SKILL_NAME, Messages.HELP_MESSAGE)
             .getResponse();
     }
 };
@@ -136,11 +127,11 @@ const CancelAndStopIntentHandler = {
                 || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speechText = STOP_MESSAGE;
+        const speechText = Messages.STOP_MESSAGE;
 
         return handlerInput.responseBuilder
             .speak(speechText)
-            .withSimpleCard(SKILL_NAME, speechText)
+            .withSimpleCard(Messages.SKILL_NAME, speechText)
             .withShouldEndSession(true)
             .getResponse();
     }
@@ -163,18 +154,24 @@ const ErrorHandler = {
         console.log(`Error handled: ${error.message}`);
 
         return handlerInput.responseBuilder
-            .speak(ERROR_NOT_UNDERSTAND_MESSAGE)
-            .reprompt(ERROR_NOT_UNDERSTAND_MESSAGE)
+            .speak(Messages.ERROR_NOT_UNDERSTAND_MESSAGE)
+            .reprompt(Messages.ERROR_NOT_UNDERSTAND_MESSAGE)
             .getResponse();
     },
 };
+
+/**
+ *
+ * @type {LambdaHandler}
+ */
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         NewUserLaunchRequestHandler,
-        FirstConfigIntentHandler,
-        HelpIntentHandler,
+        UserResumeConfigLaunchRequestHandler,
+        FirstConfigIntentHandlerStarted,
         PieceConfigIntentHandler,
+        HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler)
     .addErrorHandlers(ErrorHandler)
