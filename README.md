@@ -5,9 +5,9 @@ Pour mettre en place la base de données,on a crée une instance 'MySql' sur 'RD
 
 l'URL de connexion à mettre dans `application.properties` 
 
-| spring.datasource.url   |spring.datasource.username      | spring.datasource.password| Port |
-| ------------- |:-------------:| : -------------:| -------------:|
-| smart-home.cuen4b7banh9.us-east-1.rds.amazonaws.com/smarthomedb    | admin | 123456789   | 3306
+ spring.datasource.url   |spring.datasource.username| spring.datasource.password| Port 
+------------ | ------------ | ------------ | ------------ 
+smart-home.cuen4b7banh9.us-east-1.rds.amazonaws.com/smarthomedb    | admin | 123456789   | 3306
 
  ## Liens :
    ### API docs
@@ -15,21 +15,21 @@ l'URL de connexion à mettre dans `application.properties`
    ### Git
    - https://github.com/faldji/ISTV-Smart-Home-Back
 
- ####Piece :
+ #### Piece :
  1. Pour avoir une piece par Id methode Get : http://35.233.100.128:8080/IdPiece?id_piece=??
  2. Pour Ajouter une piece methode Post : http://35.233.100.128:8080/Ajoutpiece 
  3. Pour Modifier une piece methode Put : http://35.233.100.128:8080/Modifiepiece?id_piece=??
  4. pour Supprimer une piece methode DELETE : http://35.233.100.128:8080/Supprimerpiece?id_piece=??
-  ####Maison :
+  #### Maison :
   1. Lister toutes les maisons methode Get : http://35.233.100.128:8080/Maison?Id=??
   2. Avoir une maison par son Device methode Get : http://35.233.100.128:8080/MaisonDevice?Id_device=??
   3. Avoir une maison par son utilisateur methode Get : http://35.233.100.128:8080/MaisonUser?Id_User=?? 
-  ####Capteur :
+  #### Capteur :
   1. Pour afficher l'etat d'une piece par l'utlisateur : http://35.233.100.128:8080/capteur/Etat?id_device=??&ty_piece=??
   2. Pour Recuperer la Luminosité par l'utlisateur :http://35.233.100.128:8080/capteur/luminosite?id_device=??&ty_piece=??
   3. Pour Recuperer la Température dans la piece par l'utlisateur : http://35.233.100.128:8080/capteur/temperature?id_device=??&ty_piece=??
   4. Lister tous les Capteurs enregistrer sur la base de données : http://35.233.100.128:8080/capteurs
-  ####Configurations utiles pour l'Adaptation avec Alexa :
+  #### Configurations utiles pour l'Adaptation avec Alexa :
   1. Pour enregistrer une nouvelle maison avec le nombre du piece : http://35.233.100.128:8080/config/house/save?deviceId=??&nbPiece=??
   2. Pour ajouter des nouvelles pieces dans une maison : http://35.233.100.128:8080/config/rooms/save?deviceId=??
   
@@ -82,5 +82,6 @@ l'URL de connexion à mettre dans `application.properties`
   * [Spring Security](https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/htmlsingle/#boot-features-security)
   * [Spring Web](https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications)
   * [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/htmlsingle/#boot-features-jpa-and-spring-data)
+
   
    
