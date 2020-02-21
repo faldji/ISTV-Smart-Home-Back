@@ -49,4 +49,39 @@ public class ConfigService {
 
         return savedPieces;
     }
+
+    public Maison addMaison(User user, int nbPiece) {
+        Maison maison = new Maison();
+        maison.setNb_piece(nbPiece);
+        maison.setUtilisateur(user);
+        Collection<Piece> pieces = new ArrayList<>();
+        for (int i = 0; i < nbPiece; i++)
+            pieces.add(new Piece());
+        maison.setPieces(pieces);
+        return maisonRepository.save(maison);
+    }
+
+    public Maison findMaisonByUser(User user) {
+        return maisonRepository.findMaisonByUtilisateur(user);
+    }
+
+    public Maison addRooms(User user,Maison maison, Collection<Piece> housesRoom) {
+        if (maison.getNb_piece() != housesRoom.size())
+            return null;
+        Random random = new Random();
+
+         housesRoom.forEach(piece -> {
+             double rndLum = random.nextDouble()*500;
+             double rndTemp = (double) random.nextInt(100 - 10)-10;
+             Capteur capteur = new Capteur();
+             capteur.setLuminosite(rndLum);
+             capteur.setTemperature(rndTemp);
+             piece.setCapteur(capteur);
+             piece.setMaison(maison);
+         });
+         pieceRepository.saveAll(housesRoom);
+         user.setConfiguredHouse(true);
+         maison.setUtilisateur(user);
+         return maisonRepository.save(maison);
+    }
 }

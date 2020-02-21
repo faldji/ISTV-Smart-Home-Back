@@ -58,5 +58,42 @@ public class ConfigController {
         return new ResponseEntity<>("false",
                 HttpStatus.FORBIDDEN);
     }
+    @ApiOperation(value = "une nouvelle maison", response = String.class)
+    @PostMapping("/config/house/save")
+    @ResponseBody
+    public ResponseEntity<String> registerHouse(@RequestParam("deviceId") String deviceId,
+                                                    @RequestParam("nbPiece") int nbPiece) {
+        User user = userService.findUserByDeviceId(deviceId);
+        if(user == null)
+            return new ResponseEntity<>("pas de user avec ce id", HttpStatus.NOT_MODIFIED);
+        if(configService.findMaisonByUser(user) != null)
+            return new ResponseEntity<>("maison est unique", HttpStatus.NOT_MODIFIED);
+        if(user.isConfiguredHouse())
+            return new ResponseEntity<>("userConfig dejà à true", HttpStatus.NOT_MODIFIED);
+        if(nbPiece < 1 || nbPiece > 4)
+            return new ResponseEntity<>("nbPiece non valid",HttpStatus.NOT_MODIFIED);
+        if ( configService.addMaison(user,nbPiece) != null)
+            return new ResponseEntity<>("true", HttpStatus.OK);
+        return new ResponseEntity<>("false",
+                HttpStatus.FORBIDDEN);
+    }
+    @ApiOperation(value = "de nouvelles pièces par maison", response = String.class)
+    @PostMapping("/config/rooms/save")
+    @ResponseBody
+    public ResponseEntity<String> registerRoom(@RequestParam("deviceId") String deviceId,
+                                               @RequestBody(required = true) Collection<Piece> housesRoom) {
+        User user = userService.findUserByDeviceId(deviceId);
+        if(user == null)
+            return new ResponseEntity<>("pas de user avec ce id", HttpStatus.NOT_MODIFIED);
+        Maison maison = configService.findMaisonByUser(user);
+        if(maison == null)
+            return new ResponseEntity<>("pas de maison avec ce id", HttpStatus.NOT_MODIFIED);
+        if(user.isConfiguredHouse())
+            return new ResponseEntity<>("userConfig dejà à true", HttpStatus.NOT_MODIFIED);
+        if ( configService.addRooms(user,maison,housesRoom) != null)
+            return new ResponseEntity<>("true", HttpStatus.OK);
+        return new ResponseEntity<>("false",
+                HttpStatus.FORBIDDEN);
+    }
 
 }

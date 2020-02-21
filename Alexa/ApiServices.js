@@ -7,7 +7,7 @@ const isNewUser =  async (id) => {
         })
         .catch(error => {
             return true;
-        })
+        });
 };
 const addNewUser =  async (id) => {
     return await Axios.post('http://35.233.100.128:8080/user/add?deviceId=' + id,{deviceId: id})
@@ -16,7 +16,7 @@ const addNewUser =  async (id) => {
         })
         .catch(error => {
             return false;
-        })
+        });
 };
 const checkAndAddNewUser = async (id) => {
 
@@ -32,11 +32,26 @@ const checkAndAddNewUser = async (id) => {
 const addUserOrCheckConfigEnded = async (id) =>{
     let checkAdd = await checkAndAddNewUser(id);
     let isConfigFin = false;
-        if (!checkAdd)
-            isConfigFin = await isConfigEnded(id);
+    if (!checkAdd)
+        isConfigFin = await isConfigEnded(id);
     return  isConfigFin;
 };
-
+const saveNewHouseWithRooms = async (id,nbPieces,pieces) =>{
+    return await Axios.post('http://35.233.100.128:8080/config/save?deviceId=' + id+'&nbPiece='+nbPieces,pieces)
+        .then(res => {return res.status === 200}).catch(reason => {return false});
+};
+const saveNewHouseWithoutRooms = async (id, nbPiece) => {
+    return await Axios.post('http://35.233.100.128:8080/config/house/save?deviceId=' + id+'&nbPiece='+nbPiece)
+        .then(res => {return res.status === 200}).catch(reason => {return false});
+};
+const saveNewHouse = async (id, nbPiece) => {
+    return await Axios.post('http://35.233.100.128:8080/config/house/save?deviceId=' + id+'&nbPiece='+nbPiece)
+        .then(res => {return res.status === 200}).catch(reason => {return false});
+};
+const saveNewRooms= async (id, pieces) => {
+    return await Axios.post('http://35.233.100.128:8080/config/rooms/save?deviceId=' + id,pieces)
+        .then(res => {return res.status === 200}).catch(reason => {return false});
+};
 const isConfigEnded =  async (id) => {
     return await Axios.get('http://35.233.100.128:8080/user/config?deviceId=' + id)
         .then(response => {
@@ -44,57 +59,26 @@ const isConfigEnded =  async (id) => {
         })
         .catch(error => {
             return false;
-        })
+        });
 };
 
-//Helper Functions ============================================================================
+//get resolved value
+const getSlotResolved = (mySlot) =>{
+    if (mySlot.resolutions !== undefined)
+        return mySlot.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+    else
+    return null;
 
-function getSlotValues(filledSlots) {
-    const slotValues = {};
-
-    console.log(`The filled slots: ${JSON.stringify(filledSlots)}`);
-    Object.keys(filledSlots).forEach((item) => {
-        const name = filledSlots[item].name;
-
-        if (filledSlots[item] &&
-            filledSlots[item].resolutions &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-                case 'ER_SUCCESS_MATCH':
-                    slotValues[name] = {
-                        synonym: filledSlots[item].value,
-                        resolved: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
-                        isValidated: true,
-                    };
-                    break;
-                case 'ER_SUCCESS_NO_MATCH':
-                    slotValues[name] = {
-                        synonym: filledSlots[item].value,
-                        resolved: filledSlots[item].value,
-                        isValidated: false,
-                    };
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            slotValues[name] = {
-                synonym: filledSlots[item].value,
-                resolved: filledSlots[item].value,
-                isValidated: false,
-            };
-        }
-    }, this);
-
-    return slotValues;
-}
+};
 module.exports = {
     addNewUser,
     checkAndAddNewUser,
     isNewUser,
     isConfigEnded,
     addUserOrCheckConfigEnded,
-    getSlotValues
+    saveNewHouse,
+    saveNewRooms,
+    saveNewHouseWithRooms,
+    getSlotResolved,
+    saveNewHouseWithoutRooms
 };
