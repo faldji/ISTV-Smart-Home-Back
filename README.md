@@ -1,9 +1,9 @@
 # ISTV-Smart-Home-Back
 Une Api rest des fonctionalités de l'application de gestion d'une maison connectée "ISTV Smart Home".
-##Lien 
-###API docs
+## Lien 
+### API docs
 - http://35.233.100.128:8080/swagger-ui.html
-###Git
+### Git
 - https://github.com/faldji/JavaSpring_istvbnb
 ## Installation (Dev): un projet Java Spring
 * Run Maven Goal 'clean' 'package' <code>mvn clean  package</code>
