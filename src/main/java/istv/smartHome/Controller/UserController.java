@@ -108,6 +108,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<String> update(@RequestParam("deviceId") String deviceId,
                                          @RequestParam(value = "isActive",required = false) Boolean isActive,
+                                         @RequestParam(value = "isConfiguredHouse",required = false) Boolean isConfiguredHouse,
                                          @RequestParam(value = "isFirstUsage",required = false) Boolean isFirstUsage) {
         User user = userService.findUserByDeviceId(deviceId);
         if (user == null)
@@ -116,6 +117,9 @@ public class UserController {
             if (isActive != null){
                 user.setActive(isActive);
             }
+        if (isConfiguredHouse != null){
+            user.setConfiguredHouse(isConfiguredHouse);
+        }
             if (isFirstUsage != null){
                 user.setFirstUsage(isFirstUsage);
             }

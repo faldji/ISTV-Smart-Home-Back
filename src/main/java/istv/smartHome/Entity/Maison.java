@@ -49,18 +49,17 @@ public class Maison implements Serializable {
         return utilisateur;
     }
 
-    public Number getNb_piece() {
+    public int getNb_piece() {
         return nb_piece;
-    }
-
-    public void setUtilisateur(User utilisateur) {
-        this.utilisateur = utilisateur;
     }
 
     public void setNb_piece(int nb_piece) {
         this.nb_piece = nb_piece;
     }
 
+    public void setUtilisateur(User utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 
     public Maison() {
 
