@@ -287,7 +287,6 @@ const FirstConfigIntentHandlerCompleted = {
         if (currentIntent.confirmationStatus === "DENIED")
             return handlerInput.responseBuilder.speak(Messages.CANCEL_CREATE_HOUSE_DB)
                 .withSimpleCard(Messages.SKILL_NAME,Messages.CANCEL_CREATE_HOUSE_DB)
-                .withShouldEndSession(true)
                 .getResponse();
         if (filledSlots.nbPieces.value === "1") {
             let res = await Api.saveNewHouseWithRooms(uid,1,
@@ -368,7 +367,6 @@ const FirstConfigIntentHandlerCompleted = {
         return handlerInput.responseBuilder
             .speak(Messages.INTERNAL_ERROR_CREATE_HOUSE)
             .withSimpleCard(Messages.SKILL_NAME, Messages.INTERNAL_ERROR_CREATE_HOUSE)
-            .withShouldEndSession(true)
             .getResponse();
     }
 };
@@ -528,20 +526,32 @@ const EtatIntentHandler = {
     async handle(handlerInput) {
 
         const uid = handlerInput.requestEnvelope.session.user.userId;
-        const type = handlerInput.requestEnvelope.request.intent.slots.piece.value;
+        const type = Api.getSlotResolved(handlerInput.requestEnvelope.request.intent.slots.piece);
         const demande = Api.getSlotResolved(handlerInput.requestEnvelope.request.intent.slots.TempOuLum);
         if(type){
-            console.log('test '+demande);
             // demande de la temperature
             if(demande && demande === 'température'){
                 console.log("rentre");
                 let Temp = await GetTemperature(uid,type);
-                console.log('demande temperature ok'+Temp);
                 if(Temp === false){
-                    return handlerInput.responseBuilder.speak("Désolé, je n'arrive pas à récupérer la température. " +
+                    return handlerInput.responseBuilder.speak("Désolé, je n'arrive pas à récupérer la température de cette pièce. " +
                         "Dites que puis-je dire pour avoir de l'aide. ")
                         .withSimpleCard(Messages.SKILL_NAME,"Désolé, je n'arrive pas à récupérer la température."+
                             " Dites que puis-je dire pour avoir de l'aide.")
+                        .reprompt(Messages.HELP_REPROMPT)
+                        .getResponse();
+                }
+                if(Temp !== null && Temp > 50){
+                    return handlerInput.responseBuilder.speak("Attention ! Il fait actuellement  "
+                        + Temp.toFixed(0) +"dégré celsuis dans votre "+ type +". Je vous conseille d'allez vérifier s'il n'y a pas d'incendie. Si besoin j'appellerai les pompiers.")
+                        .withSimpleCard(Messages.SKILL_NAME,'Il fait actuellement  '+ Temp.toFixed(0) +'dégré celsuis dans votre '+ type +'.')
+                        .reprompt(Messages.HELP_REPROMPT)
+                        .getResponse();
+                }
+                if(Temp !== null && Temp < 5){
+                    return handlerInput.responseBuilder.speak("Il fait actuellement  "
+                        + Temp.toFixed(0) +"dégré celsuis dans votre "+ type +". Smart home pourra vous aider à allumer le chauffage.")
+                        .withSimpleCard(Messages.SKILL_NAME,'Il fait actuellement  '+ Temp.toFixed(0) +'dégré celsuis dans votre '+ type +'.')
                         .reprompt(Messages.HELP_REPROMPT)
                         .getResponse();
                 }
@@ -571,12 +581,18 @@ const EtatIntentHandler = {
             // demande de l'etat d'une piece
             if(demande && demande === 'les deux'){
                 let etat = await GetEtat(uid,type);
-                console.log('test'+etat);
                 if(etat === false){
-                    return handlerInput.responseBuilder.speak("Désolé, je n'arrive pas à récupérer l'état de votre maison."+
+                    return handlerInput.responseBuilder.speak("Désolé, je n'arrive pas à récupérer l'état de cette pièce."+
                         " Dites que puis-je dire pour avoir de l'aide.")
                         .withSimpleCard(Messages.SKILL_NAME,"Désolé, je n'arrive pas à récupérer l'état de votre maison."+
                             " Dites que puis-je dire pour avoir de l'aide.")
+                        .reprompt(Messages.HELP_REPROMPT)
+                        .getResponse();
+                }
+                if(etat && etat.temperature > 50){
+                    return handlerInput.responseBuilder.speak('Attention ! Il fait actuellement  '+ etat.temperature.toFixed(0) +'dégré celsuis dans votre '+ type + ' et  ' +etat.luminosite.toFixed(2)
+                        + ' de luminosité. Je vous conseille d\'allez vérifier s\'il n\'y a pas d\'incendie. ')
+                        .withSimpleCard(Messages.SKILL_NAME,'Il fait actuellement  '+ etat.temperature.toFixed(0) +'dégré celsuis dans votre '+ type + ' et  ' +etat.luminosite.toFixed(2) + ' de luminosité.')
                         .reprompt(Messages.HELP_REPROMPT)
                         .getResponse();
                 }
