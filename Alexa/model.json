@@ -1,17 +1,19 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "smart home",
+      "invocationName": "project istv",
       "intents": [
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
         {
           "name": "AMAZON.CancelIntent",
           "samples": []
         },
         {
           "name": "AMAZON.HelpIntent",
-          "samples": [
-            "Que puis-je dire"
-          ]
+          "samples": []
         },
         {
           "name": "AMAZON.StopIntent",
@@ -22,6 +24,13 @@
           "samples": []
         },
         {
+          "name": "allLightOn",
+          "slots": [],
+          "samples": [
+            "turn all lights on"
+          ]
+        },
+        {
           "name": "AMAZON.YesIntent",
           "samples": []
         },
@@ -30,184 +39,67 @@
           "samples": []
         },
         {
-          "name": "AMAZON.FallbackIntent",
-          "samples": []
-        },
-        {
           "name": "ConfigIntent",
           "slots": [
             {
-              "name": "nbPieces",
+              "name": "noPi",
+              "type": "SLOTYesNo",
+              "samples": [
+                "{noPi}"
+              ]
+            },
+            {
+              "name": "nbPiece",
               "type": "AMAZON.NUMBER",
               "samples": [
-                "{nbPieces} pièce",
-                "{nbPieces} pièces",
-                "{nbPieces}"
-              ]
-            },
-            {
-              "name": "firstRoomType",
-              "type": "SLOTTypePiece",
-              "samples": [
-                "type {firstRoomType}",
-                "{firstRoomType}"
-              ]
-            },
-            {
-              "name": "secondRoomType",
-              "type": "SLOTTypePiece",
-              "samples": [
-                "type {secondRoomType}",
-                "{secondRoomType}"
-              ]
-            },
-            {
-              "name": "thirdRoomType",
-              "type": "SLOTTypePiece",
-              "samples": [
-                "une {thirdRoomType}",
-                "un {thirdRoomType}",
-                "{thirdRoomType}"
-              ]
-            },
-            {
-              "name": "fourthRoomType",
-              "type": "SLOTTypePiece",
-              "samples": [
-                "type {fourthRoomType}",
-                "{fourthRoomType}"
+                "{nbPiece}"
               ]
             }
           ],
           "samples": [
-            "configure ma maison",
-            "configure {nbPieces} pièces",
-            "démarre la configuration",
-            "commence la configuration",
-            "configure {nbPieces} {firstRoomType}",
-            "initialise ma maison avec {nbPieces} pièces.",
-            "configure {nbPieces} de type {firstRoomType} ",
-            "configure {nbPieces} pièces.",
-            "débute la configuration",
-            "initialise ma maison",
-            "commence ma configuration",
-            "configure  ma maison"
+            "start configuration"
           ]
         },
         {
-          "name": "DemandeEtatIntent",
+          "name": "PieceConfigIntent",
           "slots": [
             {
-              "name": "piece",
-              "type": "SLOTTypePiece",
+              "name": "roomType",
+              "type": "AMAZON.Room",
               "samples": [
-                "{piece}"
-              ]
-            },
-            {
-              "name": "TempOuLum",
-              "type": "choixEtatSlot",
-              "samples": [
-                "{TempOuLum}"
+                "{roomType}"
               ]
             }
           ],
           "samples": [
-            "affiche la {TempOuLum} de la {piece}",
-            "affiche la {TempOuLum} du {piece}",
-            "affiche l'état du {piece}",
-            "affiche l'état de la {piece}",
-            "je veux savoir la {TempOuLum} du {piece}",
-            "Quelle est la {TempOuLum} du {piece}",
-            "affiche l'etat de ma maison ",
-            "je veux savoir l'etat de ma maison "
+            "config my room"
           ]
         }
       ],
       "types": [
         {
-          "name": "SLOTTypePiece",
+          "name": "SLOTYesNo",
           "values": [
             {
               "name": {
-                "value": "salon"
-              }
-            },
-            {
-              "name": {
-                "value": "toilette",
+                "value": "no",
                 "synonyms": [
-                  "salle de bain"
+                  "i don't",
+                  "absolutely not",
+                  "i don't believe",
+                  "nope"
                 ]
               }
             },
             {
               "name": {
-                "value": "chambre",
+                "value": "yes",
                 "synonyms": [
-                  "dortoire"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "cuisine"
-              }
-            }
-          ]
-        },
-        {
-          "name": "AMAZON.Room",
-          "values": [
-            {
-              "name": {
-                "value": "chambre"
-              }
-            },
-            {
-              "name": {
-                "value": "toilette",
-                "synonyms": [
-                  "salle de bain"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "salon"
-              }
-            },
-            {
-              "name": {
-                "value": "cuisine"
-              }
-            }
-          ]
-        },
-        {
-          "name": "choixEtatSlot",
-          "values": [
-            {
-              "name": {
-                "value": "les deux",
-                "synonyms": [
-                  "tout"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "luminosité",
-                "synonyms": [
-                  "lumière"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "température",
-                "synonyms": [
-                  "chaleur"
+                  "right",
+                  "anyway",
+                  "i suppose",
+                  "ok",
+                  "yeah"
                 ]
               }
             }
@@ -219,114 +111,72 @@
       "intents": [
         {
           "name": "ConfigIntent",
-          "delegationStrategy": "SKILL_RESPONSE",
-          "confirmationRequired": true,
-          "prompts": {
-            "confirmation": "Confirm.Intent.538293164909"
-          },
-          "slots": [
-            {
-              "name": "nbPieces",
-              "type": "AMAZON.NUMBER",
-              "confirmationRequired": true,
-              "elicitationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.255957468492.671592635191",
-                "elicitation": "Elicit.Slot.230820587092.211680764852"
-              },
-              "validations": [
-                {
-                  "type": "isLessThan",
-                  "prompt": "Slot.Validation.230820587092.211680764852.423652440697",
-                  "value": "5"
-                },
-                {
-                  "type": "isGreaterThan",
-                  "prompt": "Slot.Validation.230820587092.211680764852.289179237293",
-                  "value": "0"
-                }
-              ]
-            },
-            {
-              "name": "firstRoomType",
-              "type": "SLOTTypePiece",
-              "confirmationRequired": true,
-              "elicitationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.140978445211.1059624543286",
-                "elicitation": "Elicit.Slot.140978445211.1059624543286"
-              },
-              "validations": [
-                {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.185713986660.1117797835171.1053390213247"
-                }
-              ]
-            },
-            {
-              "name": "secondRoomType",
-              "type": "SLOTTypePiece",
-              "confirmationRequired": true,
-              "elicitationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.140978445211.1193207688839",
-                "elicitation": "Elicit.Slot.140978445211.1193207688839"
-              }
-            },
-            {
-              "name": "thirdRoomType",
-              "type": "SLOTTypePiece",
-              "confirmationRequired": true,
-              "elicitationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.140978445211.940393408593",
-                "elicitation": "Elicit.Slot.140978445211.940393408593"
-              }
-            },
-            {
-              "name": "fourthRoomType",
-              "type": "SLOTTypePiece",
-              "confirmationRequired": true,
-              "elicitationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.140978445211.1247206268845",
-                "elicitation": "Elicit.Slot.140978445211.1247206268845"
-              }
-            }
-          ]
-        },
-        {
-          "name": "DemandeEtatIntent",
           "confirmationRequired": false,
           "prompts": {},
           "slots": [
             {
-              "name": "piece",
-              "type": "SLOTTypePiece",
+              "name": "noPi",
+              "type": "SLOTYesNo",
               "confirmationRequired": false,
               "elicitationRequired": true,
               "prompts": {
-                "elicitation": "Elicit.Slot.1108869323418.1504749744386"
+                "elicitation": "Elicit.Slot.1395412129296.1296800405383"
               },
               "validations": [
                 {
                   "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.706094593526.870893258750.1155925206138"
+                  "prompt": "Slot.Validation.1395412129296.1296800405383.1216321720491"
                 }
               ]
             },
             {
-              "name": "TempOuLum",
-              "type": "choixEtatSlot",
-              "confirmationRequired": false,
+              "name": "nbPiece",
+              "type": "AMAZON.NUMBER",
+              "confirmationRequired": true,
               "elicitationRequired": true,
               "prompts": {
-                "elicitation": "Elicit.Slot.1108869323418.1518031894967"
+                "confirmation": "Confirm.Slot.1395412129296.9172896816",
+                "elicitation": "Elicit.Slot.1395412129296.9172896816"
               },
               "validations": [
                 {
-                  "type": "hasEntityResolutionMatch",
-                  "prompt": "Slot.Validation.1108869323418.1518031894967.96705366802"
+                  "type": "isLessThan",
+                  "prompt": "Slot.Validation.1395412129296.9172896816.451200449397",
+                  "value": "5"
+                },
+                {
+                  "type": "isGreaterThan",
+                  "prompt": "Slot.Validation.1395412129296.9172896816.1244732224746",
+                  "value": "0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "PieceConfigIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "roomType",
+              "type": "AMAZON.Room",
+              "confirmationRequired": true,
+              "elicitationRequired": true,
+              "prompts": {
+                "confirmation": "Confirm.Slot.1011467838360.405026293116",
+                "elicitation": "Elicit.Slot.1011467838360.405026293116"
+              },
+              "validations": [
+                {
+                  "type": "isInSet",
+                  "prompt": "Slot.Validation.1011467838360.405026293116.1059333007649",
+                  "values": [
+                    "Kitchen",
+                    "Bathroom",
+                    "Living room",
+                    "Bedroom"
+                  ]
                 }
               ]
             }
@@ -341,7 +191,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Avez-vous configurer la rasberry ?"
+            "value": "Have you set the rasberry ?"
           }
         ]
       },
@@ -350,7 +200,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "les réponses correctent sont oui ou non."
+            "value": "The acceptable answer is Yes or No"
           }
         ]
       },
@@ -359,7 +209,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "bien, combien de pièces voulez-vous configurer?"
+            "value": "Well, for testing purpose how many room you want to set?"
           }
         ]
       },
@@ -368,7 +218,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "êtes vous sûre de vouloir gérer {nbPiece} pièces ?"
+            "value": "Are you sure you want to handle {nbPiece} rooms ?"
           }
         ]
       },
@@ -377,7 +227,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Désolé, mais smart home ne peut pas gérer plus de quatres pièces pour le moment."
+            "value": "Sorry but our app can't handle more than five room, so try again."
           }
         ]
       },
@@ -386,386 +236,34 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Désolé, je ne peux pas configurer une maison avec zéro pièces."
+            "value": "Sorry i can't set a house with zero room, so try again."
           }
         ]
       },
       {
-        "id": "Elicit.Slot.551868082033.1426689729689",
+        "id": "Elicit.Slot.1011467838360.405026293116",
         "variations": [
           {
             "type": "PlainText",
-            "value": "Commençons par configurer votre maison. Vous êtes près ?"
+            "value": "What is her type?"
           }
         ]
       },
       {
-        "id": "Slot.Validation.66447535163.1110989360851.1275385237343",
+        "id": "Confirm.Slot.1011467838360.405026293116",
         "variations": [
           {
             "type": "PlainText",
-            "value": "Oui ou Non"
+            "value": "are you sure you want to confirm {roomType} ?"
           }
         ]
       },
       {
-        "id": "Confirm.Intent.66447535163",
+        "id": "Slot.Validation.1011467838360.405026293116.1059333007649",
         "variations": [
           {
             "type": "PlainText",
-            "value": "la maison avec {nbPiece} est créer, voulez-vous continuer?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.760274373466.1527327604938",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "voulez-vous un autre nom pour la pièce {roomType} ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Intent.760274373466",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Voulez-vous confirmer cette pièce?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.760274373466.1527327604938.1428666963988",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "oui ou non."
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.230820587092.211680764852",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "donner un nombre de pièce à configurer"
-          },
-          {
-            "type": "PlainText",
-            "value": "combien de pièces voulez-vous configurer?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.230820587092.211680764852.423652440697",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Désolé, mais smart home  peut gérer uniquement entre une et quatres pièces pour le moment."
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.230820587092.211680764852.289179237293",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Désolé, je ne peux pas configurer une maison avec {nbPieces} pièces."
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.255957468492.671592635191",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "êtes-vous sûre de vouloir configurer {nbPieces} pièce ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Voulez-vous vraiment configurer {nbPieces} pièces ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1108869323418.541066132294",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "okey quelle piece ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1108869323418.1504749744386",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "pour quelle pièce?"
-          },
-          {
-            "type": "PlainText",
-            "value": "de quelle pièce s'agit-il ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.1108869323418.1504749744386",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "voulez-vous confirmer {piece} ?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.1108869323418.1504749744386.1394198256543",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas compris, essayer de dire salon, cuisine, toilette ou chambre"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1108869323418.1518031894967",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Quelles information souhaitez-vous ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "vous voulez savoir la température, la lumière  ou les deux?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.1108869323418.1518031894967",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "etes-vous sur ?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.1108869323418.1518031894967.96705366802",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Desolé mais je n'accepte que température ou luminosité pour l'instant."
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.140978445211.1059624543286",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Quel est le type de cette pièce ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Quel est le type de la prémière pièce ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.140978445211.1059624543286",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "êtes-vous sûre de vouloir confirmer la pièce {firstRoomType}  ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.140978445211.1193207688839",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Quel est le type de la seconde pièce ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.140978445211.1193207688839",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "êtes-vous sûre de vouloir confirmer {secondRoomType} comme seconde pièce ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.140978445211.940393408593",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Au tours de la troisième pièce. Quel est son type ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.140978445211.940393408593",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "êtes-vous sûre de vouloir confirmé {thirdRoomType} comme troisième pièce ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.140978445211.1247206268845",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Au tours de la dernière pièce. Quel est son type ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.140978445211.1247206268845",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "êtes-vous sûre de vouloir confirmer {fourthRoomType} comme dernière pièce ?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.63036453020.705118514203.1191939646277",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas bien compris, essayer chambre, cuisine, salon ou toilette."
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.538293164909.72150273890.394005073228",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas bien compris, essayer chambre, cuisine, salon ou toilette."
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.538293164909.471211057561.1357703270319",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas bien compris, essayer chambre, cuisine, salon ou toilette."
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.538293164909.108300776414.424771959912",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas bien compris, essayer chambre, cuisine, salon ou toilette."
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Intent.538293164909",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Voullez-vous garder cette configuration ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Voulez-vous enregistrer ces paramètres pour cette maison ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Intent.1551117728634",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Voulez-vous enregistrer ces paramètres pour cette maison ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Voullez-vous garder cette configuration ?"
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.1551117728634.375923384496",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Quel est le type de cette pièce ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.1551117728634.375923384496",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "êtes-vous sûre de vouloir confirmer la pièce {oneFirstRoom}  ?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.1551117728634.375923384496.940526347128",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas bien compris. Essayer chambre, cuisine, salon ou toilette."
-          }
-        ]
-      },
-      {
-        "id": "Elicit.Slot.996690327721.1475834294085",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Combien ?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Intent.996690327721",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Voulez-vous confirmer {nPieces} pièces?"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Intent.492121675951",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Voulez-vous les informations du {piece} ?"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.185713986660.1117797835171.1053390213247",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas bien compris. Essayer chambre, cuisine, salon ou toilette"
-          }
-        ]
-      },
-      {
-        "id": "Slot.Validation.706094593526.870893258750.1155925206138",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Je n'ai pas compris, essayer de dire salon, cuisine, toilette ou chambre"
+            "value": "Sorry the acceptable values are bedroom, living room, kitchen and bathroom."
           }
         ]
       }
